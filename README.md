@@ -1,1 +1,1 @@
-# discord-bot
+# Legendary Bot
