@@ -25,7 +25,7 @@ namespace LegendaryBot.Database
         {
             string[] paths = { "LegendaryBot.db" };
             string fullPath = Path.Combine(paths);
-            optionsBuilder.UseSqlite($"Filename={fullPath}", options =>
+            optionsBuilder.UseSqlite($"Data Source={fullPath}", options =>
             {
                 options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
             });
