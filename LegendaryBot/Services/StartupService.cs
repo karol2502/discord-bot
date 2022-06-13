@@ -1,6 +1,8 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using LegendaryBot.Database;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
@@ -9,21 +11,29 @@ namespace LegendaryBot.Services
     public class StartupService
     {
         private readonly IServiceProvider _provider;
-        private readonly DiscordSocketClient _discord;
+        private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
+        private readonly LegendaryDbContext _dbContext;
         private readonly IConfigurationRoot _config;
+        private readonly LegendaryDbSeeder _legendaryDbSeeder;
 
         // DiscordSocketClient, CommandService, and IConfigurationRoot are injected automatically from the IServiceProvider
         public StartupService(
             IServiceProvider provider,
             DiscordSocketClient discord,
             CommandService commands,
-            IConfigurationRoot config)
+            IConfigurationRoot config,
+            LegendaryDbSeeder legendaryDbSeeder,
+            LegendaryDbContext dbContext)
         {
             _provider = provider;
             _config = config;
-            _discord = discord;
+            _legendaryDbSeeder = legendaryDbSeeder;
+            _client = discord;
             _commands = commands;
+            _dbContext = dbContext;
+
+            _client.Ready += OnReady;      // Added function invoked on client ready
         }
 
         public async Task StartAsync()
@@ -32,10 +42,23 @@ namespace LegendaryBot.Services
             if (string.IsNullOrWhiteSpace(discordToken))
                 throw new Exception("Please enter your bot's token into the `config.json` file found in the applications root directory.");
 
-            await _discord.LoginAsync(TokenType.Bot, discordToken);     // Login to discord
-            await _discord.StartAsync();                                // Connect to the websocket
+            await _client.LoginAsync(TokenType.Bot, discordToken);     // Login to discord
+            await _client.StartAsync();
 
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);     // Load commands and modules into the command service
+            await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);     // Load commands and modules into the command service            
+        }
+
+        private async Task OnReady()
+        {
+            if (!(await _dbContext.Database.CanConnectAsync()))
+            {
+                await _dbContext.Database.MigrateAsync();
+                await _legendaryDbSeeder.Seed();
+            }
+            else
+            {
+                Console.WriteLine("Database connected!");
+            }
         }
     }
 }

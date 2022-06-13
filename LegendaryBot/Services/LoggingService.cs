@@ -6,7 +6,7 @@ namespace LegendaryBot.Services
 {
     public class LoggingService
     {
-        private readonly DiscordSocketClient _discord;
+        private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
 
         private string _logDirectory { get; }
@@ -17,10 +17,10 @@ namespace LegendaryBot.Services
         {
             _logDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
 
-            _discord = discord;
+            _client = discord;
             _commands = commands;
 
-            _discord.Log += OnLogAsync;
+            _client.Log += OnLogAsync;
             _commands.Log += OnLogAsync;
         }
 

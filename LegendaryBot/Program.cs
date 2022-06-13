@@ -1,6 +1,4 @@
-﻿using LegendaryBot;
-
-namespace Example
+﻿namespace LegendaryBot
 {
     class Program
     {
