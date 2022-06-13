@@ -23,7 +23,7 @@ namespace LegendaryBot.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string[] paths = { "Database", "LegendaryBot.db" };
+            string[] paths = { "LegendaryBot.db" };
             string fullPath = Path.Combine(paths);
             optionsBuilder.UseSqlite($"Filename={fullPath}", options =>
             {
