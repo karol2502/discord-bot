@@ -29,8 +29,6 @@ namespace LegendaryBot.Database
             {
                 options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
             });
-
-            //optionsBuilder.UseSqlite($"Data Source={fullPath}");
             base.OnConfiguring(optionsBuilder);
         }
     }

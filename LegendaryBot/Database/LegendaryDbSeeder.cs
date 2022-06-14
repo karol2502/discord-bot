@@ -18,7 +18,6 @@ namespace LegendaryBot.Database
         {
             if (await _dbContext.Database.CanConnectAsync())
             {
-                Console.WriteLine("Seeder, connected to db");
                 if (!_dbContext.Guilds.Any())
                 {
                     var guilds = GetGuilds();

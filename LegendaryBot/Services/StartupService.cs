@@ -59,15 +59,15 @@ namespace LegendaryBot.Services
             {
                 Console.WriteLine("Migrate not succeded");
             }
-            try
-            {
-                Console.WriteLine("Try create");
-                await _dbContext.Database.EnsureCreatedAsync();
-            }
-            catch
-            {
-                Console.WriteLine("Create not succeded");
-            }
+            //try
+            //{
+            //    Console.WriteLine("Try create");
+            //    await _dbContext.Database.EnsureCreatedAsync();
+            //}
+            //catch
+            //{
+            //    Console.WriteLine("Create not succeded");
+            //}
             await _legendaryDbSeeder.Seed();
             Console.WriteLine("Database connected!");
         }
