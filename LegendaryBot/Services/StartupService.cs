@@ -50,7 +50,23 @@ namespace LegendaryBot.Services
 
         private async Task OnReady()
         {
-            await _dbContext.Database.MigrateAsync();
+            try
+            {
+                Console.WriteLine("Try migrate");
+                await _dbContext.Database.MigrateAsync();
+            }
+            catch
+            {
+                Console.WriteLine("Migrate not succeded");
+            }
+            try
+            {
+                await _dbContext.Database.EnsureCreatedAsync();
+            }
+            catch
+            {
+                Console.WriteLine("Create not succeded");
+            }
             await _legendaryDbSeeder.Seed();
             Console.WriteLine("Database connected!");
         }
