@@ -61,6 +61,7 @@ namespace LegendaryBot.Services
             }
             try
             {
+                Console.WriteLine("Try create");
                 await _dbContext.Database.EnsureCreatedAsync();
             }
             catch
