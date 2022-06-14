@@ -25,10 +25,12 @@ namespace LegendaryBot.Database
         {
             string fileName = "LegendaryBot.db";
             string fullPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), fileName);
-            optionsBuilder.UseSqlite($"Data Source={fullPath}", options =>
-            {
-                options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
-            });
+            //optionsBuilder.UseSqlite($"Data Source={fullPath}", options =>
+            //{
+            //    options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
+            //});
+
+            optionsBuilder.UseSqlite($"Data Source={fileName}");
             base.OnConfiguring(optionsBuilder);
         }
     }
