@@ -64,14 +64,21 @@ namespace LegendaryBot.Services
                 }
 
                 var reactions = _dbContext.MessageReactions.Where(m => m.GuildId == id).ToList<MessageReaction>();
+
+                List<Emoji> mr = new List<Emoji>();
                 foreach (var reaction in reactions)
                 {
                     if (msg.Content.ToLower().Contains(reaction.Message))
                     {
-                        await s.AddReactionAsync(Emote.Parse(reaction.Reaction));
+                        if (!mr.Contains(new Emoji(reaction.Reaction)))
+                        {
+                            mr.Add(new Emoji(reaction.Reaction));
+                        }
                     }
                 }
+                await msg.AddReactionsAsync(mr);
             }
         }
     }
 }
+

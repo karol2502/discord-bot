@@ -31,7 +31,13 @@ namespace LegendaryBot.Modules
             await _dbContext.MessageResponses.AddAsync(messageResponse);
             await _dbContext.SaveChangesAsync();
 
-            await ReplyAsync($"Message: {message}\nResponse: {response}\nAdded!");
+            var embed = new EmbedBuilder()
+                .WithTitle("Dodawanie odpowiedzi")
+                .WithColor(new Color(242, 75, 63))
+                .AddField($"Wiadomość:", $"{message}")
+                .AddField($"Odpowiedź:", $"{response}");
+
+            await ReplyAsync(embed: embed.Build());
         }
 
         [Command("ResponseList")]
@@ -48,14 +54,15 @@ namespace LegendaryBot.Modules
                 return;
             }
 
-            string message = "";
-
+            var embed = new EmbedBuilder()
+                .WithTitle("Lista dodanych wiadomości i odpowiedzi")
+                .WithColor(new Color(242, 75, 63));
             foreach (var mr in messageResponses)
             {
-                message += $"Id: {mr.Id}\tMessage: {mr.Message}\tResponse: {mr.Response}\n";
+                embed.AddField($"ID: {mr.Id}", $"Wiadomość: {mr.Message}\nOdpowiedź: {mr.Response}");
             }
 
-            await ReplyAsync(message);
+            await ReplyAsync(embed: embed.Build());
         }
 
         [Command("ResponseDelete")]
@@ -68,14 +75,24 @@ namespace LegendaryBot.Modules
 
             if (messageResponse == null)
             {
-                await ReplyAsync("Brak takiego rekordu");
+                var embedError = new EmbedBuilder()
+                .WithTitle("Error")
+                .WithDescription("Brak takiego ID w bazie")
+                .WithColor(new Color(242, 75, 63));
+
+                await ReplyAsync(embed: embedError.Build());
                 return;
             }
 
             _dbContext.MessageResponses.Remove(messageResponse);
             await _dbContext.SaveChangesAsync();
 
-            await ReplyAsync($"Usunięto odpowiedź");
+            var embed = new EmbedBuilder()
+                .WithTitle("Usunięto odpowiedź")
+                .WithColor(new Color(242, 75, 63))
+                .AddField($"ID: {messageResponse.Id}", $"Wiadomość: {messageResponse.Message}\nReakcja: {messageResponse.Response}");
+
+            await ReplyAsync(embed: embed.Build());
         }
     }
 }
